@@ -1,4 +1,5 @@
 GEM
+  remote: https://rubygems.org/
   specs:
     addressable (2.5.1)
       public_suffix (~> 2.0, >= 2.0.2)
@@ -51,6 +52,7 @@ GEM
       uuidtools (~> 2.1)
     dm-validations (1.2.0)
       dm-core (~> 1.2.0)
+    dotenv (2.2.1)
     equalizer (0.0.11)
     faraday (0.12.1)
       multipart-post (>= 1.2, < 3)
@@ -79,6 +81,7 @@ PLATFORMS
 
 DEPENDENCIES
   data_mapper
+  dotenv
   sqlite3
   telegram-bot-ruby
 
