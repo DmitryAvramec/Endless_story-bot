@@ -1,11 +1,10 @@
 require 'telegram/bot'
 require 'dotenv'
-require 'sqlite3'
 require 'yaml'
 Dotenv.load
-token = ENV["BOT_TOKEN"]
+TOKEN = ENV["BOT_TOKEN"]
 
-steps = YAML.load_file('./Story.yml')
+STEPS = YAML.load_file('./story.yml')
 HELLO =  <<-HELLOSTRING
 Hello! I'm pretty young story bot
 Usage:
@@ -14,12 +13,11 @@ Usage:
       /hi       - and i will say hello to you :)
 HELLOSTRING
 
-current_step =-1
-$last_step = 3
-$status = 0
-check = false
+CURENT_STEP =-1
+STATUS = 0
+CHECK = false
 
-Telegram::Bot::Client.run(token) do |bot|
+Telegram::Bot::Client.run(TOKEN) do |bot|
   bot.listen do |message|
     send = lambda { |bot_message| bot.api.sendMessage(chat_id: message.chat.id, text: bot_message) }
     if !message.text.nil?
@@ -33,8 +31,8 @@ Telegram::Bot::Client.run(token) do |bot|
         when "/help"
           send.(HELLO)
         when "/story"
-          current_step = 0
-          check = true
+          CURENT_STEP = 0
+          CHECK = true
           first_time = true
           send.("Готов к путешествию?")
           send.("Ай, кого я спрашиваю?! Прыгай в ступу! Земля, прощай!")
@@ -43,32 +41,33 @@ Telegram::Bot::Client.run(token) do |bot|
       else
 
         case  
-        when message.text == steps[current_step]["right_answer"] 
-          if current_step == steps.size
-           $status = 1
+        when message.text == STEPS[current_step]["right_answer"] 
+          if CURENT_STEP == STEPS.size
+           STATUS = 1
           end 
-          current_step += 1
-        when message.text != steps[current_step]["right_answer"] 
-          $status = 2   
+          CURENT_STEP += 1
+        when message.text != STEPS[current_step]["right_answer"] 
+          STATUS = 2   
         end
 
-        case $status
+        case STATUS
         when 1
           send.("You done it! Congrats! Come back again :)")
-          check = false 
-          $status = 0
+          CHECK = false 
+          STATUS = 0
         when 2
-          send.($steps[current_step]["fail"])
+          send.(STEPS[current_step]["fail"])
           send.("На этот раз не удалось =\\")
-          check = false
-          $status = 0
+          CHECK= false
+          STATUS = 0
         end
       end
 
       if check
-        send.(steps[current_step]["story"])
+        send.(STEPS[CURENT_STEP]["story"])
         send.("Выбери:")
-        $steps[current_step]["answers"].each do |answer|
+        answers = STEPS[CURENT_STEP]["answers"]
+        answers.each do |answer|
         send.(answer)
         end
         first_time = false
