@@ -1,1 +1,1 @@
-bot: ruby Bot.rb
+bot: ruby bot_2.rb
